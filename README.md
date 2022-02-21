@@ -72,7 +72,9 @@ entries.addChangeListener((_, oldVal, newVal) {
 })
 ```
 
-* Similarly one can add insert, remove and move listeners, more details in documentation or examples. Refresh listeners are called when list is modified using modifyList method, or backingList setter is used.
+* Currently a change / addition / removal in list causes the ListView to rebuild, always use ListView.builder and not a precomputed widget list.
+
+* Similarly one can add insert, remove, move and refresh listeners, more details in documentation or examples. Refresh listeners are called when list is modified using modifyList method, or backingList setter is used.
 
 ---
 
@@ -83,6 +85,9 @@ entries.listView((entries) => ReorderableListView(
 	itemBuilder: (context, i) => ListTile(...), // Build ListTile from entry,
 	onReorder: entries.move,
 ));
+
+* For a simple todo list example, see examples folder.
+
 ```
 
 ### Why Live.widget and LiveList.listView methods instead of separate widgets?
