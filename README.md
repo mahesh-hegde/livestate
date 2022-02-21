@@ -86,9 +86,8 @@ entries.listView((entries) => ReorderableListView(
 	onReorder: entries.move,
 ));
 
-* For a simple todo list example, see examples folder.
-
 ```
+* For a simple todo list example, see examples folder.
 
 ### Why Live.widget and LiveList.listView methods instead of separate widgets?
 You can do that using LiveListView and LiveWidget constructors, but due to some quirks of dart type system, you have to often supply a type parameter, or else the variable in closure will be treated as `dynamic`. Therefore it is more ergonomic to use the extension methods.
