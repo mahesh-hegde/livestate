@@ -43,11 +43,19 @@ class Live<T> extends _ChangeListenerNoArg {
     return ret;
   }
 
+  /// Create a live variable that's recomputed when any Live in the list changes
   Live.ofAll(List<_ChangeListenerNoArg> list, T Function() generateFunc)
       : _value = generateFunc() {
     for (var l in list) {
       l.addNoArgListener(() => value = generateFunc());
     }
+  }
+
+  /// Add a listener which is called when any Live in list changes
+  static void addListenerToAll(List<_ChangeListenerNoArg> list, void Function() listener) {
+	for (var l in list) {
+		l.addNoArgListener(listener);
+	}
   }
 
   T _value;
