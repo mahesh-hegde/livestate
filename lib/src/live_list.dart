@@ -11,8 +11,11 @@ typedef ListRefreshListener<T> = void Function(List<T>);
 class LiveList<T> extends Iterable<T> {
   List<T> _list;
 
-  /// copying the elements of the iterable
+  //// Create LiveList copying the elements of the iterable
   LiveList.ofElements(Iterable<T> elements) : _list = elements.toList();
+
+  /// Create empty LiveList
+  LiveList.empty() : _list = [];
 
   /// Create a LiveList which performs insert/remove/change operations
   /// on backingList.

@@ -30,7 +30,7 @@ dependencies:
   flutter:
     sdk: flutter
   livestate:
-    path: ../../
+    git: https://github.com/mahesh-hegde/livestate.git
 
 
   # The following adds the Cupertino Icons font to your application.

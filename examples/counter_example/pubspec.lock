@@ -84,9 +84,11 @@ packages:
   livestate:
     dependency: "direct main"
     description:
-      path: "../.."
-      relative: true
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: dd1126ecec723c81f29ea3e48efb27acee8412a3
+      url: "https://github.com/mahesh-hegde/livestate.git"
+    source: git
     version: "0.0.1"
   matcher:
     dependency: transitive
