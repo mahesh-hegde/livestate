@@ -66,6 +66,11 @@ class Live<T> extends _ChangeListenerNoArg {
   /// Get the value held by Live variable
   T get value => _value;
 
+  /// Set value without notifying listeners or updating bound variables. This can be sometimes useful.
+  void setValueWithoutNotifyingListeners(T value) {
+	_value = value;
+  }
+
   // parent parameter is passed
   // so that only one update happens in a bidirectional bind
   // you can still screw up by creating a cycle
@@ -115,8 +120,7 @@ class Live<T> extends _ChangeListenerNoArg {
   }
 
   /// Unregister the listener callback by equality comparison.
-  /// The closure equality is well defined for static members & object methods,
-  /// but not arbitrary closures.
+  /// The closure equality is well defined for static members & object methods, but not arbitrary closures.
   void removeListenerCallback(Consumer<T> callback) {
     int oldLen = 0;
     assert((oldLen = _listeners.length) != 0);
@@ -125,7 +129,7 @@ class Live<T> extends _ChangeListenerNoArg {
     assert(oldLen > _listeners.length);
   }
 
-  // Unregister listener callback if the key is valid
+  /// Unregister listener callback if the key is valid
   void removeListener(int key) {
     int oldLen = 0;
     assert((oldLen = _listeners.length) != 0);

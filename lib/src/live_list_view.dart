@@ -46,12 +46,7 @@ class _LiveListViewState<T> extends State<LiveListView<T>> {
 }
 
 extension LiveListViewWidgetCreator<T> on LiveList<T> {
-  Widget listView(
-    Widget Function(LiveList<T>) builder,
-  ) {
-    return LiveListView(
-      this,
-      builder,
-    );
+  Widget listView(Widget Function(LiveList<T>) builder) {
+    return LiveListView(this, builder);
   }
 }
