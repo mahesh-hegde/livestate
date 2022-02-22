@@ -61,7 +61,7 @@ var entries = LiveList.backedBy(backingList);
 ```dart
 // Here I assume Entry type is modified in-place.
 
-entries.addChangeListener((_, _, newVal) => database.updateEntry(newVal));
+entries.addChangeListener((_, oldVal, newVal) => database.updateEntry(newVal));
 
 // or if you are reassigning with new object
 // you might want to do something like this.
