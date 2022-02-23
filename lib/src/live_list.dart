@@ -181,7 +181,13 @@ class LiveList<T> extends Iterable<T> {
     });
   }
 
-  // Modify the list in-place and call all refresh listeners
+  /// Modify list but doesn't call any listeners. Might be useful in few cases
+  /// In effect it's same as getting the backingList and doing the operation
+  void modifyListWithoutNotifyingListeners(void Function(List<T>) callback) {
+	callback(_list);
+  }
+
+  /// Modify the list in-place and call all refresh listeners
   void modifyList(void Function(List<T>) callback) {
     callback(_list);
     for (var f in _refreshListeners ?? const []) {
@@ -189,7 +195,7 @@ class LiveList<T> extends Iterable<T> {
     }
   }
 
-  // Replace backing list by new list and call all refresh listeners
+  /// Replace backing list by new list and call all refresh listeners
   set backingList(List<T> newList) {
     _list = newList;
 	_refreshListeners?.forEach((f) => f.callback(_list));

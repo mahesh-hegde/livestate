@@ -1,9 +1,5 @@
 import 'keyed_item.dart';
 
-import 'live_widget.dart';
-
-import 'package:flutter/material.dart';
-
 typedef Consumer<T> = void Function(T);
 
 typedef Transformer<T> = T Function(T);
