@@ -114,13 +114,16 @@ class TodoListHomePage extends StatelessWidget {
                       }),
                 ])),
             itemCount: es.length,
+            // map range 0 .. len-1 to len-1 .. 0
+            // map range 0 .. len to len .. 0
+            onReorder: (o, n) => es.move(es.length - o - 1, es.length - n),
             // ItemBuilder building from end of the list.
             // In this example, probably it doesn't make any difference.
             // But might need this in an application, where it makes
             // sense to show the newly appended objects on top.
             // The i'th list tile is created from element at es.length - 1 - i,
             // also note the arguments to move;
-            itemBuilder: (context, i) => CheckboxListTile(
+			itemBuilder: (context, i) => CheckboxListTile(
               key: Key(es[es.length - i - 1].toString()),
               onChanged: (s) => es.modifyAt(
                   es.length - i - 1, (t) => t.isFinished = s ?? t.isFinished),
@@ -133,10 +136,8 @@ class TodoListHomePage extends StatelessWidget {
                     es.removeAt(es.length - i - 1);
                   }),
             ),
-            // map range 0 .. len-1 to len-1 .. 0
-            // map range 0 .. len to len .. 0
-            onReorder: (o, n) => es.move(es.length - o - 1, es.length - n),
-          )),
+          ),
+		  ),
     );
   }
 }
