@@ -10,11 +10,12 @@ typedef Transformer<T> = T Function(T);
 
 // Circus to be able to write
 // Live.of([x, y, z], () => x.value + y.value + z.value)
-abstract class _ChangeListenerNoArg {
+abstract class ChangePropagator {
   int addNoArgListener(void Function() callback);
+  void removeNoArgListener(int key);
 }
 
-class Live<T> extends _ChangeListenerNoArg {
+class Live<T> extends ChangePropagator {
   /// Constructor with an initial value
   Live(this._value);
 
@@ -44,7 +45,7 @@ class Live<T> extends _ChangeListenerNoArg {
   }
 
   /// Create a live variable that's recomputed when any Live in the list changes
-  Live.ofAll(List<_ChangeListenerNoArg> list, T Function() generateFunc)
+  Live.ofAll(List<ChangePropagator> list, T Function() generateFunc)
       : _value = generateFunc() {
     for (var l in list) {
       l.addNoArgListener(() => value = generateFunc());
@@ -52,7 +53,7 @@ class Live<T> extends _ChangeListenerNoArg {
   }
 
   /// Add a listener which is called when any Live in list changes
-  static void addListenerToAll(List<_ChangeListenerNoArg> list, void Function() listener) {
+  static void addListenerToAll(List<ChangePropagator> list, void Function() listener) {
 	for (var l in list) {
 		l.addNoArgListener(listener);
 	}
@@ -115,9 +116,13 @@ class Live<T> extends _ChangeListenerNoArg {
     return key;
   }
 
+  @override
   int addNoArgListener(void Function() callback) {
     return addListener((t) => callback());
   }
+
+  @override
+  void removeNoArgListener(int key) => removeListener(key);
 
   /// Unregister the listener callback by equality comparison.
   /// The closure equality is well defined for static members & object methods, but not arbitrary closures.

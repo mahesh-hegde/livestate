@@ -2,14 +2,14 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:livestate/livestate.dart';
 
-import 'widget_test.dart';
-
 void main() {
   test('Test update and map', () {
 	var x = Live(0);
 	var xstr = x.derive((i) => "$i;");
 	expect(xstr.value, "0;");
 	x.value = 1;
+	expect(xstr.value, "1;");
+	x.setValueWithoutNotifyingListeners(5);
 	expect(xstr.value, "1;");
   });
 

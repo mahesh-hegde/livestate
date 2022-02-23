@@ -29,8 +29,6 @@ class _LiveWidgetState<T> extends State<LiveWidget<T>> {
 
   @override
   void initState() {
-    // Because any other way to prevent nullable variable in constructor
-    // makes the constructor call require type params
     assert(widget.mapperFunc != null || widget.mapperFuncWithContext != null);
     super.initState();
     widget.liveState.addListener(setWidgetState);
@@ -60,3 +58,42 @@ extension WidgetCreation<T> on Live<T> {
   Widget widgetWithContext(Widget Function(BuildContext, T) builder) =>
       LiveWidget.withContext(this, builder);
 }
+
+// LiveWidget that listens to many LiveVariables
+
+class MultiLiveWidget extends StatefulWidget {
+	const MultiLiveWidget.withContext(this.list, this.builder, {Key? key}) : super(key: key);
+	MultiLiveWidget(this.list, Widget Function() builder, {Key? key}) : builder = ((context) => builder()), super(key: key);
+	final List<ChangePropagator> list;
+	final Widget Function(BuildContext) builder;
+
+	@override
+	_MultiLiveWidgetState createState() => _MultiLiveWidgetState();
+}
+
+class _MultiLiveWidgetState extends State<MultiLiveWidget> {
+	late List<int> listenerKeys;
+
+	void setWidgetState() {
+		setState(() {});
+	}
+
+	@override
+	void initState() {
+		super.initState();
+		listenerKeys = widget.list.map((l) =>
+			l.addNoArgListener(setWidgetState)).toList();
+	}
+
+	@override
+	Widget build(BuildContext context) => widget.builder(context);
+
+	@override
+	void dispose() {
+		for (int i = 0; i < listenerKeys.length; i++) {
+			widget.list[i].removeNoArgListener(listenerKeys[i]);
+		}
+		super.dispose();
+	}
+}
+

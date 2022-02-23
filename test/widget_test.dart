@@ -19,15 +19,34 @@ void main() {
     expect(find.text("<1>"), findsOneWidget);
   });
 
+  testWidgets('Test MultiLiveWidget', (tester) async {
+    var x = Live(0);
+    var y = Live(2);
+    var z = Live(4);
+    await tester.pumpWidget(MaterialAppWrapper(MultiLiveWidget(
+        [x, y, z], () => Text("${x.value + y.value + z.value}"))));
+    expect(find.text("6"), findsOneWidget);
+    x.value++;
+    await tester.pumpAndSettle();
+    expect(find.text("6"), findsNothing);
+    expect(find.text("7"), findsOneWidget);
+    y.value = 0;
+    await tester.pumpAndSettle();
+    expect(find.text("5"), findsOneWidget);
+    z.value = 6;
+    await tester.pumpAndSettle();
+    expect(find.text("7"), findsOneWidget);
+  });
+
   testWidgets('test LiveListView and LiveList listeners', (tester) async {
     var xs = ["A", "B", "C", "D", "E", "F"];
     var xsl = LiveList.backedBy(xs);
     await tester.pumpWidget(
         MaterialAppWrapper(xsl.listView((xsl) => ReorderableListView.builder(
-			  key: const Key("ListView"),
+              key: const Key("ListView"),
               itemCount: xsl.length,
               itemBuilder: (context, i) => ListTile(
-				key: Key(xsl[i]),
+                key: Key(xsl[i]),
                 title: Text(xsl[i]),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete),
@@ -36,40 +55,40 @@ void main() {
               ),
               onReorder: xsl.move,
             ))));
-	
-	verifyList(List<String> list) async {
-		await tester.pumpAndSettle();
-		// This part is useless
-		// Because all our test items will be in viewport
-		// But it passes
-		for (var s in list) {
-			var itemFinder = find.byKey(ValueKey(s));
-			await tester.scrollUntilVisible(
-				itemFinder,
-				500.0,
-			);
-			expect(itemFinder, findsOneWidget);
-		}
-		expect(xsl.length, list.length);
-		for (int i = 0; i < xsl.length; i++) {
-			expect(xsl[i], list[i]);
-		}
-	}
 
-	xsl.removeAt(0);
-	await verifyList(["B", "C", "D", "E", "F"]);
-	xsl.remove("E");
-	await verifyList(["B", "C", "D", "F"]);
-	xsl.move(0, 2);
-	await verifyList(["C", "B", "D", "F"]);
-	xsl.move(3, 0);
-	await verifyList(["F", "C", "B", "D"]);
-	xsl.insert(0, "A");
-	await verifyList(["A", "F", "C", "B", "D"]);
-	xsl.modifyList((list) => list.sort());
-	await verifyList(["A", "B", "C", "D", "F"]);
-	xsl.backingList = ["0", "1", "2"];
-	await verifyList(["0", "1", "2"]);
+    verifyList(List<String> list) async {
+      await tester.pumpAndSettle();
+      // This part is useless
+      // Because all our test items will be in viewport
+      // But it passes
+      for (var s in list) {
+        var itemFinder = find.byKey(ValueKey(s));
+        await tester.scrollUntilVisible(
+          itemFinder,
+          500.0,
+        );
+        expect(itemFinder, findsOneWidget);
+      }
+      expect(xsl.length, list.length);
+      for (int i = 0; i < xsl.length; i++) {
+        expect(xsl[i], list[i]);
+      }
+    }
+
+    xsl.removeAt(0);
+    await verifyList(["B", "C", "D", "E", "F"]);
+    xsl.remove("E");
+    await verifyList(["B", "C", "D", "F"]);
+    xsl.move(0, 2);
+    await verifyList(["C", "B", "D", "F"]);
+    xsl.move(3, 0);
+    await verifyList(["F", "C", "B", "D"]);
+    xsl.insert(0, "A");
+    await verifyList(["A", "F", "C", "B", "D"]);
+    xsl.modifyList((list) => list.sort());
+    await verifyList(["A", "B", "C", "D", "F"]);
+    xsl.backingList = ["0", "1", "2"];
+    await verifyList(["0", "1", "2"]);
   });
 }
 
