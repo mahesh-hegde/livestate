@@ -13,7 +13,7 @@ var counter = Live(0);
 
 * Create a widget that automatically updates with the variable, using the `widget` method.
 ```dart
-var countTextWidget = counter.widget((count) => Text("$"))
+var countTextWidget = counter.widget((count) => Text("$count"))
 ```
 
 * Update the live variable in a function, eg: event handler;
@@ -80,7 +80,7 @@ entries.addChangeListener((_, oldVal, newVal) {
 
 * Create a listView from a LiveList
 ```dart
-entries.listView((entries) => ReorderableListView(
+entries.listView((entries) => ReorderableListView.builder(
 	itemCount: entries.length,
 	itemBuilder: (context, i) => ListTile(...), // Build ListTile from entry,
 	onReorder: entries.move,

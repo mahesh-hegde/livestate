@@ -217,3 +217,8 @@ class LiveList<T> extends Iterable<T> {
   List<T> get backingList => _list;
 }
 
+extension LiveListCollector<T> on Iterable<T> {
+	/// Collects the elements of the iterable into a LiveList
+	LiveList<T> toLiveList() => LiveList.ofElements(this);
+}
+
