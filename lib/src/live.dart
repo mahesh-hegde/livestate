@@ -6,6 +6,10 @@ typedef Transformer<T> = T Function(T);
 
 // Circus to be able to write
 // Live.of([x, y, z], () => x.value + y.value + z.value)
+
+/// ChangePropagator allows to register and unregister No-argument listeners
+/// Differences with changeNotifier: the implementation of registering and notifying handlers is left to the class;
+/// Also register and unregister operations on basis of integer keys instead of closure comparison.
 abstract class ChangePropagator {
   int addNoArgListener(void Function() callback);
   void removeNoArgListener(int key);
@@ -17,9 +21,8 @@ class Live<T> extends ChangePropagator {
 
   // Can't make constructors generic, thus static methods
 
-  /// Create a Live<T> , which always updates
-  /// when either ul or vl is updated.
-  /// Make sure to supply type parameters explicitly.
+  /// Create a Live<T> , which always updates when either ul or vl is updated.
+  /// Make sure to provide type parameters explicitly, since dart cannot infer them well.
   static Live<T> of2<U, V, T>(
       Live<U> ul, Live<V> vl, T Function(U, V) mapperFunc) {
     var ret = Live(mapperFunc(ul.value, vl.value));
@@ -30,7 +33,7 @@ class Live<T> extends ChangePropagator {
 
   /// Create a Live<T>, which always updates
   /// when any of ul, vl, wl is updated.
-  /// Make sure to supply type parameters explicitly.
+  /// Make sure to provide type parameters explicitly.
   static Live<T> of3<U, V, W, T>(
       Live<U> ul, Live<V> vl, Live<W> wl, T Function(U, V, W) mapperFunc) {
     var ret = Live(mapperFunc(ul.value, vl.value, wl.value));
@@ -41,6 +44,7 @@ class Live<T> extends ChangePropagator {
   }
 
   /// Create a live variable that's recomputed when any Live in the list changes
+  /// Note: No arguments will be passed to callback, manually access the values from live variables.
   Live.ofAll(List<ChangePropagator> list, T Function() generateFunc)
       : _value = generateFunc() {
     for (var l in list) {
